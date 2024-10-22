@@ -129,8 +129,8 @@ class Content {
 	 * of the canvasWrap element.
 	 */
 	setCanvasSize() {
-		this.DOM.canvas.width = '100%';
-		this.DOM.canvas.height = auto;
+		this.DOM.canvas.width = this.DOM.canvasWrap.offsetWidth;
+		this.DOM.canvas.height = this.DOM.canvasWrap.offsetHeight;
 	}
 
 	/**
