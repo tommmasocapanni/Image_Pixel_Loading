@@ -129,9 +129,24 @@ class Content {
 	 * of the canvasWrap element.
 	 */
 	setCanvasSize() {
-		this.DOM.canvas.width = this.DOM.canvasWrap.offsetWidth;
-		this.DOM.canvas.height = this.DOM.canvasWrap.offsetHeight;
+		const canvasWrapWidth = this.DOM.canvasWrap.offsetWidth;
+		const canvasWrapHeight = this.DOM.canvasWrap.offsetHeight;
+	
+		if (canvasWrapWidth > 0 && canvasWrapHeight > 0) {
+			const scaleFactor = 2;
+	
+			// Imposta il canvas con risoluzione più alta
+			this.DOM.canvas.width = canvasWrapWidth * scaleFactor;
+			this.DOM.canvas.height = canvasWrapHeight * scaleFactor;
+	
+			// Imposta le dimensioni visive normali per il canvas
+			this.DOM.canvas.style.width = `${canvasWrapWidth}px`;
+			this.DOM.canvas.style.height = `${canvasWrapHeight}px`;
+		} else {
+			setTimeout(() => this.setCanvasSize(), 100);
+		}
 	}
+	
 
 	/**
 	 * Renders the image on the canvas.
@@ -140,20 +155,18 @@ class Content {
 	render() {
 		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
-		// increase a bit to not have a gap in the end of the image
-		// when we have big pixel sizes
+		const scaleFactor = 2; // Deve essere lo stesso usato in setCanvasSize()
+	
+		// Aumenta leggermente per evitare gap sui bordi
 		const w = offsetWidth + offsetWidth * 0.05;
 		const h = offsetHeight + offsetHeight * 0.05;
 	
-		// Calculate the dimensions and position for rendering the image 
-		// within the canvas based on the image aspect ratio.
 		let newWidth = w;
 		let newHeight = h;
 		let newX = 0;
 		let newY = 0;
 	
-		// Adjust the dimensions and position if the image 
-		// aspect ratio is different from the canvas aspect ratio
+		// Calcola le dimensioni finali in base all'aspect ratio dell'immagine e al box
 		if (newWidth / newHeight > this.imgRatio) {
 			newHeight = Math.round(w / this.imgRatio);
 			newY = (h - newHeight) / 2; // Centra verticalmente
@@ -162,32 +175,52 @@ class Content {
 			newX = (w - newWidth) / 2; // Centra orizzontalmente
 		}
 	
-		// Get the pixel factor based on the current index
+		// Calcola le dimensioni corrette tenendo conto del fattore di scala
+		const scaledNewWidth = newWidth * scaleFactor;
+		const scaledNewHeight = newHeight * scaleFactor;
+		const scaledNewX = newX * scaleFactor;
+		const scaledNewY = newY * scaleFactor;
+	
+		// Usa il pixel factor per determinare il livello di pixelation
 		let pxFactor = this.pxFactorValues[this.pxIndex];
 		const size = pxFactor * 0.01;
 	
-		// Turn off image smoothing to achieve the pixelated effect
+		// Disattiva lo smoothing per mantenere l'effetto di pixelation
+		this.ctx.imageSmoothingEnabled = size === 1;
 		this.ctx.mozImageSmoothingEnabled = size === 1;
 		this.ctx.webkitImageSmoothingEnabled = size === 1;
-		this.ctx.imageSmoothingEnabled = size === 1;
 	
-		// Clear the canvas
+		// Pulisci il canvas prima di disegnare
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
 	
-		// Draw the original image at a fraction of the final size
-		this.ctx.drawImage(this.img, 0, 0, w * size, h * size);
+		// Disegna l'immagine ridotta per ottenere l'effetto pixelation
+		const reducedWidth = scaledNewWidth * size;
+		const reducedHeight = scaledNewHeight * size;
 	
-		// Enlarge the minimized image to full size
+		// Disegna l'immagine ridotta, e poi scalala per ottenere l'effetto desiderato
+		this.ctx.drawImage(
+			this.img, 
+			0, 
+			0, 
+			this.img.width, 
+			this.img.height, 
+			scaledNewX, 
+			scaledNewY, 
+			reducedWidth, 
+			reducedHeight
+		);
+	
+		// Poi ridimensiona per ottenere l'effetto finale
 		this.ctx.drawImage(
 			this.DOM.canvas,
-			0,
-			0,
-			w * size,
-			h * size,
-			newX,
-			newY,
-			newWidth,
-			newHeight
+			scaledNewX, 
+			scaledNewY, 
+			reducedWidth, 
+			reducedHeight, 
+			scaledNewX, 
+			scaledNewY, 
+			scaledNewWidth, 
+			scaledNewHeight
 		);
 	}
 		
