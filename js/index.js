@@ -140,21 +140,58 @@ class Content {
 	render() {
 		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
-		let newWidth = offsetWidth;
-		let newHeight = offsetHeight;
-	
+		// increase a bit to not have a gap in the end of the image
+		// when we have big pizel sizes
+		const w = offsetWidth + offsetWidth * 0.05;
+		const h = offsetHeight + offsetHeight * 0.05;
+
+		// Calculate the dimensions and position for rendering the image 
+		// within the canvas based on the image aspect ratio.
+		let newWidth = w;
+		let newHeight = h;
+		let newX = 0;
+		let newY = 0;
+
+		// Adjust the dimensions and position if the image 
+		// aspect ratio is different from the canvas aspect ratio
 		if (newWidth / newHeight > this.imgRatio) {
-			newHeight = newWidth / this.imgRatio;
+			newHeight = Math.round(w / this.imgRatio);
+			// let's keep Y at 0 because we want the pixels to not
+			// be cut off at the top. Uncomment if you want the 
+			// image to be centered.
+			// newY = (h - newHeight) / 2; 
 		} else {
-			newWidth = newHeight * this.imgRatio;
+			newWidth = Math.round(h * this.imgRatio);
+			newX = (w - newWidth) / 2;
 		}
-	
-		// Centra l'immagine disegnata sul canvas
-		const newX = (offsetWidth - newWidth) / 2;
-		const newY = (offsetHeight - newHeight) / 2;
-	
+
+		// Get the pixel factor based on the current index
+		let pxFactor = this.pxFactorValues[this.pxIndex];
+		const size = pxFactor * 0.01;
+
+		// Turn off image smoothing to achieve the pixelated effect
+		this.ctx.mozImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.webkitImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.imageSmoothingEnabled = size === 1 ? true : false;
+
+		// Clear the canvas
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
-		this.ctx.drawImage(this.img, newX, newY, newWidth, newHeight);
+
+		// Draw the original image at a fraction of the final size
+		this.ctx.drawImage(this.img, 0, 0, w * size, h * size);
+
+		// Enlarge the minimized image to full size
+		this.ctx.drawImage(
+			this.DOM.canvas,
+			0,
+			0,
+			w * size,
+			h * size,
+			newX,
+			newY,
+			newWidth,
+			newHeight
+		);
 	}
 
 	/**
