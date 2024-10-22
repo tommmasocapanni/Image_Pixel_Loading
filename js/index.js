@@ -90,7 +90,7 @@ class Content {
 		// specific starting point:
 		ScrollTrigger.create({
 			trigger: this.DOM.el,
-			start: 'top+=20% bottom',
+			start: 'top bottom',
 			onEnter: () => {
 				this.animatePixels();
 			},
