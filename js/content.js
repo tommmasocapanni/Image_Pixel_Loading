@@ -29,37 +29,40 @@ export class Content {
 	 * Constructor for the Content class.
 	 * Accepts a DOM element representing the content element.
 	 */
+	// Modifica del costruttore per utilizzare <img> invece di background-image
 	constructor(DOM_el) {
-		// Initialize DOM elements
+		// Inizializzazione degli elementi DOM
 		this.DOM.el = DOM_el;
 		this.DOM.canvasWrap = this.DOM.el.querySelector('.canvas-wrap');
 		this.DOM.inner = this.DOM.el.querySelector('.content__inner');
 
-		// Extract the image source from the background image style
-		this.imageSrc = this.DOM.canvasWrap.style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
+		// Trova l'elemento <img> e usa il suo src come sorgente immagine
+		const imgElement = this.DOM.canvasWrap.querySelector('.canvas-img');
+		this.imageSrc = imgElement.src;
 
-		// Create a canvas element and append it to the canvasWrap element
+		// Creazione dell'elemento canvas e aggiunta alla canvasWrap
 		this.DOM.canvas = document.createElement('canvas');
 		this.DOM.canvasWrap.appendChild(this.DOM.canvas);
 
-		// Get the 2D rendering context of the canvas
+		// Ottieni il contesto 2D del canvas
 		this.ctx = this.DOM.canvas.getContext('2d');
 
-		// Create a new Image object and load the image source
+		// Crea un oggetto Image e carica la sorgente dell'immagine
 		this.img = new Image();
 		this.img.src = this.imageSrc;
 
-		// Once the image is loaded, perform necessary calculations and rendering
+		// Una volta che l'immagine è caricata, calcola e renderizza
 		this.img.onload = () => {
 			const imgWidth = this.img.width;
 			const imgHeight = this.img.height;
 			this.imgRatio = imgWidth / imgHeight;
 			this.setCanvasSize();
 			this.render();
-			// Set up event listeners and triggers
+			// Imposta gli eventi
 			this.initEvents();
 		};
 	}
+
 
 	/**
 	 * Sets up event listeners and the GSAP scroll triggers.
