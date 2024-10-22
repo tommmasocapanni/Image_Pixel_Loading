@@ -158,7 +158,7 @@ class Content {
 	render() {
 		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
-		
+	
 		// Aumenta leggermente per evitare gap sui bordi
 		const w = offsetWidth + offsetWidth * 0.05;
 		const h = offsetHeight + offsetHeight * 0.05;
@@ -193,15 +193,37 @@ class Content {
 		// Pulisci il canvas prima di disegnare
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
 	
-		// Disegna direttamente l'immagine ridotta e scalata
+		// Disegna l'immagine ridotta per ottenere l'effetto pixelation
+		const reducedWidth = newWidth * size;
+		const reducedHeight = newHeight * size;
+	
+		// Disegna l'immagine ridotta sul canvas
 		this.ctx.drawImage(
 			this.img, 
+			0, 
+			0, 
+			this.img.width, 
+			this.img.height, 
+			newX, 
+			newY, 
+			reducedWidth, 
+			reducedHeight
+		);
+	
+		// Poi ridimensiona per ottenere l'effetto di ingrandimento pixelato
+		this.ctx.drawImage(
+			this.DOM.canvas,
+			newX, 
+			newY, 
+			reducedWidth, 
+			reducedHeight, 
 			newX, 
 			newY, 
 			newWidth, 
 			newHeight
 		);
 	}
+	
 	
 
 	/**
