@@ -98,14 +98,11 @@ body #cdawrap {
 
 
 .canvas-wrap {
-    display: flex;
-    justify-content: center; /* Centrare orizzontalmente */
-    align-items: center;     /* Centrare verticalmente */
-    width: 100%;             /* Assicurarsi che prenda l'intera larghezza */
-    height: 100%;            /* Assicurarsi che prenda l'intera altezza */
-    overflow: hidden;
-    position: relative;
-	opacity: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 canvas {
