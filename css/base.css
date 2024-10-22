@@ -97,7 +97,7 @@ body #cdawrap {
 }
 
 
-.content {
+/* .content {
 	display: grid;
 	grid-template-rows: 100vh 1fr auto;
 	grid-template-columns: 100%;
@@ -106,7 +106,7 @@ body #cdawrap {
 	height: calc(var(--imgRatio) * 100vw);
 	padding: 0 var(--padding-page);
 	position: relative;
-}
+} */
 
 .canvas-wrap {
 	position: absolute;
