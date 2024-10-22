@@ -129,24 +129,9 @@ class Content {
 	 * of the canvasWrap element.
 	 */
 	setCanvasSize() {
-		const canvasWrapWidth = this.DOM.canvasWrap.offsetWidth;
-		const canvasWrapHeight = this.DOM.canvasWrap.offsetHeight;
-	
-		if (canvasWrapWidth > 0 && canvasWrapHeight > 0) {
-			// Aumenta la risoluzione per una migliore qualità
-			this.DOM.canvas.width = canvasWrapWidth * 2; // Doppia la risoluzione
-			this.DOM.canvas.height = canvasWrapHeight * 2;
-	
-			// Scala per evitare immagini sfocate
-			this.DOM.canvas.style.width = `${canvasWrapWidth}px`;
-			this.DOM.canvas.style.height = `${canvasWrapHeight}px`;
-			
-			this.ctx.scale(2, 2); // Scala il contesto del canvas
-		} else {
-			setTimeout(() => this.setCanvasSize(), 100); // Riprova dopo 100ms
-		}
+		this.DOM.canvas.width = this.DOM.canvasWrap.offsetWidth;
+		this.DOM.canvas.height = this.DOM.canvasWrap.offsetHeight;
 	}
-	
 
 	/**
 	 * Renders the image on the canvas.
@@ -182,26 +167,31 @@ class Content {
 
 		// Get the pixel factor based on the current index
 		let pxFactor = this.pxFactorValues[this.pxIndex];
-		// Assicurati che il ridimensionamento non sia troppo drastico
-		const size = Math.max(pxFactor * 0.01, 0.5); // Imposta un limite minimo per 'size'
-
+		const size = pxFactor * 0.01;
 
 		// Turn off image smoothing to achieve the pixelated effect
-		// Controlla la smoothing basandoti su una condizione più specifica
-		const enableSmoothing = size === 1;
-		this.ctx.imageSmoothingEnabled = enableSmoothing;
-		this.ctx.mozImageSmoothingEnabled = enableSmoothing;
-		this.ctx.webkitImageSmoothingEnabled = enableSmoothing;
+		this.ctx.mozImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.webkitImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.imageSmoothingEnabled = size === 1 ? true : false;
 
-		// Disegna direttamente l'immagine ridotta e poi scalata
+		// Clear the canvas
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
 
-		// Calcola larghezza e altezza ridotte
-		const reducedWidth = w * size;
-		const reducedHeight = h * size;
+		// Draw the original image at a fraction of the final size
+		this.ctx.drawImage(this.img, 0, 0, w * size, h * size);
 
-		// Disegna l'immagine ridotta, poi ridimensiona
-		this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height, newX, newY, reducedWidth, reducedHeight);
+		// Enlarge the minimized image to full size
+		this.ctx.drawImage(
+			this.DOM.canvas,
+			0,
+			0,
+			w * size,
+			h * size,
+			newX,
+			newY,
+			newWidth,
+			newHeight
+		);
 	}
 
 	/**
