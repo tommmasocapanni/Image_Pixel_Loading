@@ -129,9 +129,24 @@ class Content {
 	 * of the canvasWrap element.
 	 */
 	setCanvasSize() {
-		this.DOM.canvas.width = this.DOM.canvasWrap.offsetWidth;
-		this.DOM.canvas.height = this.DOM.canvasWrap.offsetHeight;
+		const canvasWrapWidth = this.DOM.canvasWrap.offsetWidth;
+		const canvasWrapHeight = this.DOM.canvasWrap.offsetHeight;
+	
+		if (canvasWrapWidth > 0 && canvasWrapHeight > 0) {
+			const scaleFactor = 2;
+	
+			this.DOM.canvas.width = canvasWrapWidth * scaleFactor;
+			this.DOM.canvas.height = canvasWrapHeight * scaleFactor;
+	
+			this.DOM.canvas.style.width = `${canvasWrapWidth}px`;
+			this.DOM.canvas.style.height = `${canvasWrapHeight}px`;
+	
+			this.ctx.scale(scaleFactor, scaleFactor);
+		} else {
+			setTimeout(() => this.setCanvasSize(), 100);
+		}
 	}
+	
 
 	/**
 	 * Renders the image on the canvas.
