@@ -121,6 +121,9 @@ class Content {
 	setCanvasSize() {
 		this.DOM.canvas.width = this.DOM.canvasWrap.offsetWidth;
 		this.DOM.canvas.height = this.DOM.canvasWrap.offsetHeight;
+
+		// Centrare l'immagine sul canvas
+		this.ctx.translate(this.DOM.canvas.width / 2, this.DOM.canvas.height / 2);
 	}
 
 	/**
