@@ -106,11 +106,10 @@ body #cdawrap {
 }
 
 canvas {
-    display: block;
-    max-width: 100%;         /* Permetti al canvas di ridimensionarsi */
-    max-height: 100%;        /* Mantieni proporzioni corrette */
-    object-fit: contain;
-    position: absolute;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
 
