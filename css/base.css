@@ -97,18 +97,6 @@ body #cdawrap {
 }
 
 
-
-.content {
-	/* display: grid;
-	grid-template-rows: 100vh 1fr auto;
-	grid-template-columns: 100%;
-	width: 100vw;
-	--imgRatio: 1344 / 896;
-	height: calc(var(--imgRatio) * 100vw);
-	padding: 0 var(--padding-page); */
-	position: relative;
-}
-
 .canvas-wrap {
     display: flex;
     justify-content: center; /* Centrare orizzontalmente */
