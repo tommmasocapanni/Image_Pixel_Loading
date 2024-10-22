@@ -111,32 +111,23 @@ body #cdawrap {
 
 .canvas-wrap {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    justify-content: center; /* Centrare orizzontalmente */
+    align-items: center;     /* Centrare verticalmente */
+    width: 100%;             /* Assicurarsi che prenda l'intera larghezza */
+    height: 100%;            /* Assicurarsi che prenda l'intera altezza */
     overflow: hidden;
     position: relative;
+	opacity: 0 !important;
 }
 
 canvas {
     display: block;
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 100%;         /* Permetti al canvas di ridimensionarsi */
+    max-height: 100%;        /* Mantieni proporzioni corrette */
     object-fit: contain;
-    position: absolute; /* Se serve centrarlo */
+    position: absolute;
 }
 
-.canvas-wrap {
-	/* position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%; */
-	background-position: 50% 50%;
-	background-size: cover;
-	opacity: 0;
-}
 
 .no-js .canvas-wrap {
 	opacity: 1;
