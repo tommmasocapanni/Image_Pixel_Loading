@@ -142,8 +142,8 @@ class Content {
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
 		// increase a bit to not have a gap in the end of the image
 		// when we have big pixel sizes
-		const w = offsetWidth + offsetWidth;
-		const h = offsetHeight + offsetHeight;
+		const w = offsetWidth ;
+		const h = offsetHeight;
 	
 		// Calculate the dimensions and position for rendering the image 
 		// within the canvas based on the image aspect ratio.
