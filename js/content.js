@@ -1,5 +1,5 @@
 // The Content class handles the pixelation effect
-export class Content {
+class Content {
 	// DOM elements
 	DOM = {
 		el: null,

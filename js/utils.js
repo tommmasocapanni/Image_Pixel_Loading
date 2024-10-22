@@ -4,7 +4,3 @@ const preloadImages = (selector = 'img') => {
         imagesLoaded(document.querySelectorAll(selector), {background: true}, resolve);
     });
 };
-
-export { 
-    preloadImages,
-};
