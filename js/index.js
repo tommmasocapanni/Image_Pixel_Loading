@@ -141,22 +141,24 @@ class Content {
 		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
 	
-		// Calcolo delle dimensioni e posizionamento dell'immagine per ottenere l'effetto "cover"
-		let newWidth, newHeight, newX, newY;
+		// Aumenta leggermente per evitare gap sui bordi
+		const w = offsetWidth + offsetWidth * 0.05;
+		const h = offsetHeight + offsetHeight * 0.05;
 	
-		// Verifica le proporzioni e regola l'immagine per coprire il contenitore
-		if (this.imgRatio > offsetWidth / offsetHeight) {
+		let newWidth = w;
+		let newHeight = h;
+		let newX = 0;
+		let newY = 0;
+	
+		// Calcola le dimensioni finali in base all'aspect ratio dell'immagine e al box
+		if (newWidth / newHeight > this.imgRatio) {
 			// L'immagine è più larga rispetto al contenitore
-			newWidth = offsetHeight * this.imgRatio;
-			newHeight = offsetHeight;
-			newX = (offsetWidth - newWidth) / 2; // Centra orizzontalmente
-			newY = 0; // Non serve centrare verticalmente
+			newHeight = Math.round(w / this.imgRatio);
+			newY = (h - newHeight) / 2; // Centra verticalmente
 		} else {
 			// L'immagine è più alta rispetto al contenitore
-			newWidth = offsetWidth;
-			newHeight = offsetWidth / this.imgRatio;
-			newX = 0; // Non serve centrare orizzontalmente
-			newY = (offsetHeight - newHeight) / 2; // Centra verticalmente
+			newWidth = Math.round(h * this.imgRatio);
+			newX = (w - newWidth) / 2; // Centra orizzontalmente
 		}
 	
 		// Usa il pixel factor per determinare il livello di pixelation
@@ -164,10 +166,9 @@ class Content {
 		const size = pxFactor * 0.01;
 	
 		// Disattiva lo smoothing per mantenere l'effetto di pixelation
-		const enableSmoothing = size === 1;
-		this.ctx.imageSmoothingEnabled = enableSmoothing;
-		this.ctx.mozImageSmoothingEnabled = enableSmoothing;
-		this.ctx.webkitImageSmoothingEnabled = enableSmoothing;
+		this.ctx.imageSmoothingEnabled = size === 1;
+		this.ctx.mozImageSmoothingEnabled = size === 1;
+		this.ctx.webkitImageSmoothingEnabled = size === 1;
 	
 		// Pulisci il canvas prima di disegnare
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
@@ -176,7 +177,7 @@ class Content {
 		const reducedWidth = newWidth * size;
 		const reducedHeight = newHeight * size;
 	
-		// Disegna l'immagine ridotta e applica l'effetto di ingrandimento pixelato
+		// Disegna l'immagine ridotta, e poi scalala per ottenere l'effetto desiderato
 		this.ctx.drawImage(
 			this.img, 
 			0, 
