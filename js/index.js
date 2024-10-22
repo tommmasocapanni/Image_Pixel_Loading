@@ -155,38 +155,54 @@ class Content {
 	render() {
 		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
 		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
+		// increase a bit to not have a gap in the end of the image
+		// when we have big pizel sizes
 		const w = offsetWidth + offsetWidth * 0.05;
 		const h = offsetHeight + offsetHeight * 0.05;
-	
+
+		// Calculate the dimensions and position for rendering the image 
+		// within the canvas based on the image aspect ratio.
 		let newWidth = w;
 		let newHeight = h;
 		let newX = 0;
 		let newY = 0;
-	
+
+		// Adjust the dimensions and position if the image 
+		// aspect ratio is different from the canvas aspect ratio
 		if (newWidth / newHeight > this.imgRatio) {
 			newHeight = Math.round(w / this.imgRatio);
+			// let's keep Y at 0 because we want the pixels to not
+			// be cut off at the top. Uncomment if you want the 
+			// image to be centered.
+			// newY = (h - newHeight) / 2; 
 		} else {
 			newWidth = Math.round(h * this.imgRatio);
 			newX = (w - newWidth) / 2;
 		}
-	
+
+		// Get the pixel factor based on the current index
 		let pxFactor = this.pxFactorValues[this.pxIndex];
-		const size = Math.max(pxFactor * 0.01, 0.5); // Limite minimo per evitare distorsioni eccessive
-	
+		// Assicurati che il ridimensionamento non sia troppo drastico
+		const size = Math.max(pxFactor * 0.01, 0.5); // Imposta un limite minimo per 'size'
+
+
+		// Turn off image smoothing to achieve the pixelated effect
+		// Controlla la smoothing basandoti su una condizione più specifica
 		const enableSmoothing = size === 1;
 		this.ctx.imageSmoothingEnabled = enableSmoothing;
 		this.ctx.mozImageSmoothingEnabled = enableSmoothing;
 		this.ctx.webkitImageSmoothingEnabled = enableSmoothing;
-	
+
+		// Disegna direttamente l'immagine ridotta e poi scalata
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
-	
+
+		// Calcola larghezza e altezza ridotte
 		const reducedWidth = w * size;
 		const reducedHeight = h * size;
-	
-		// Disegna l'immagine ridotta per l'effetto pixel, e poi scalala
+
+		// Disegna l'immagine ridotta, poi ridimensiona
 		this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height, newX, newY, reducedWidth, reducedHeight);
 	}
-	
 
 	/**
 	 * Animates the pixelation effect.
