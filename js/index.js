@@ -207,36 +207,10 @@ class Content {
 			}, this.pxIndex === 0 ? 300 : 80); // The first time should be the longest.
 		} 
 		else {
-			this.renderFullResolution();
+			this.pxIndex = this.pxFactorValues.length - 1;
 		}
 	}
-	renderFullResolution() {
-		this.ctx.imageSmoothingEnabled = true; // Abilita l’antialiasing per la nitidezza
 	
-		// Imposta il canvas per adattarsi alla risoluzione completa del contenitore
-		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
-		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
-		const w = offsetWidth;
-		const h = offsetHeight;
-	
-		let newWidth = w;
-		let newHeight = h;
-		let newX = 0;
-		let newY = 0;
-	
-		// Mantieni le proporzioni dell'immagine
-		if (newWidth / newHeight > this.imgRatio) {
-			newHeight = Math.round(w / this.imgRatio);
-			newY = (h - newHeight) / 2;
-		} else {
-			newWidth = Math.round(h * this.imgRatio);
-			newX = (w - newWidth) / 2;
-		}
-	
-		// Pulisci il canvas e renderizza l'immagine originale senza riduzioni
-		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
-		this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height, newX, newY, newWidth, newHeight);
-	}
 }
 
 
