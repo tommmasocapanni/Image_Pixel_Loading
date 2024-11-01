@@ -167,9 +167,9 @@ class Content {
 		const size = pxFactor * 0.01;
 	
 		// Turn off image smoothing to achieve the pixelated effect
-		this.ctx.mozImageSmoothingEnabled = size === 1;
-		this.ctx.webkitImageSmoothingEnabled = size === 1;
-		this.ctx.imageSmoothingEnabled = size === 1;
+		this.ctx.mozImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.webkitImageSmoothingEnabled = size === 1 ? true : false;
+		this.ctx.imageSmoothingEnabled = size === 1 ? true : false;
 	
 		// Clear the canvas
 		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
