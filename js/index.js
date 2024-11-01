@@ -138,58 +138,38 @@ class Content {
 	 * Applies the pixelation effect based on the pixel factor.
 	 */
 	render() {
-		const offsetWidth = this.DOM.canvasWrap.offsetWidth;
-		const offsetHeight = this.DOM.canvasWrap.offsetHeight;
-		// increase a bit to not have a gap in the end of the image
-		// when we have big pixel sizes
-		const w = offsetWidth ;
-		const h = offsetHeight ;
+	    // Prendi il fattore di pixelazione corrente
+	    let pxFactor = this.pxFactorValues[this.pxIndex] || 1;
+	    const size = pxFactor * 0.01;
 	
-		// Calculate the dimensions and position for rendering the image 
-		// within the canvas based on the image aspect ratio.
-		let newWidth = w;
-		let newHeight = h;
-		let newX = 0;
-		let newY = 0;
+	    // Disabilita l'anti-aliasing per ottenere l'effetto pixelato
+	    this.ctx.imageSmoothingEnabled = size === 1;
 	
-		// Adjust the dimensions and position if the image 
-		// aspect ratio is different from the canvas aspect ratio
-		if (newWidth / newHeight > this.imgRatio) {
-			newHeight = Math.round(w / this.imgRatio);
-			newY = (h - newHeight) / 2; // Centra verticalmente
-		} else {
-			newWidth = Math.round(h * this.imgRatio);
-			newX = (w - newWidth) / 2; // Centra orizzontalmente
-		}
+	    // Pulisci il canvas
+	    this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
 	
-		// Get the pixel factor based on the current index
-		let pxFactor = this.pxFactorValues[this.pxIndex];
-		const size = pxFactor * 0.01;
+	    // Dimensioni dell'immagine originale
+	    const imgWidth = this.img.width;
+	    const imgHeight = this.img.height;
 	
-		// Turn off image smoothing to achieve the pixelated effect
-		this.ctx.mozImageSmoothingEnabled = size === 1;
-		this.ctx.webkitImageSmoothingEnabled = size === 1;
-		this.ctx.imageSmoothingEnabled = size === 1;
+	    // Centra l'immagine nel canvas
+	    const x = (this.DOM.canvas.width - imgWidth) / 2;
+	    const y = (this.DOM.canvas.height - imgHeight) / 2;
 	
-		// Clear the canvas
-		this.ctx.clearRect(0, 0, this.DOM.canvas.width, this.DOM.canvas.height);
-	
-		// Draw the original image at a fraction of the final size
-		this.ctx.drawImage(this.img, 0, 0, w * size, h * size);
-	
-		// Enlarge the minimized image to full size
-		this.ctx.drawImage(
-			this.DOM.canvas,
-			0,
-			0,
-			w * size,
-			h * size,
-			newX,
-			newY,
-			newWidth,
-			newHeight
-		);
+	    // Disegna l'immagine a una frazione della dimensione originale per ottenere l'effetto pixelato
+	    this.ctx.drawImage(
+	        this.img,
+	        0,
+	        0,
+	        imgWidth * size,
+	        imgHeight * size,
+	        x,
+	        y,
+	        imgWidth,
+	        imgHeight
+	    );
 	}
+
 		
 
 	/**
